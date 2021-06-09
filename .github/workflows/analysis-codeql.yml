@@ -9,6 +9,7 @@ on:
       - dev
       - devel
       - develop
+      - main
 
 env:
   VCPKG_BUILD_TYPE: release
