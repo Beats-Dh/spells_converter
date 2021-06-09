@@ -16,18 +16,25 @@ type Spells struct {
 }
 
 type Spell struct {
-	XMLName    xml.Name `xml:"instant"`
-	Name       string   `xml:"name,attr"`
-	Words      string   `xml:"words,attr"`
-	Aggressive string   `xml:"aggressive,attr"`
-	BlockWalls string   `xml:"blockwalls,attr"`
-	NeedTarget string   `xml:"needtarget,attr"`
-	NeedLearn  string   `xml:"needlearn,attr"`
-	Direction  string   `xml:"direction,attr"`
-	Exhaustion string   `xml:"exhaustion,attr"`
-	SelfTarget string   `xml:"selftarget,attr"`
-	Range      string   `xml:"range,attr"`
-	Script     string   `xml:"script,attr"`
+	XMLName                 xml.Name `xml:"instant"`
+	Group                   string   `xml:"group,attr"`
+	Spellid                 string   `xml:"spellid,attr"`
+	Lvl                     string   `xml:"lvl,attr"`
+	Mana                    string   `xml:"mana,attr"`
+	Groupcooldown           string   `xml:"groupcooldown,attr"`
+	Prem                    string   `xml:"prem,attr"`
+	CasterTargetOrDirection string   `xml:"castertargetordirection,attr"`
+	Name                    string   `xml:"name,attr"`
+	Words                   string   `xml:"words,attr"`
+	Aggressive              string   `xml:"aggressive,attr"`
+	BlockWalls              string   `xml:"blockwalls,attr"`
+	NeedTarget              string   `xml:"needtarget,attr"`
+	NeedLearn               string   `xml:"needlearn,attr"`
+	Direction               string   `xml:"direction,attr"`
+	Exhaustion              string   `xml:"exhaustion,attr"`
+	SelfTarget              string   `xml:"selftarget,attr"`
+	Range                   string   `xml:"range,attr"`
+	Script                  string   `xml:"script,attr"`
 }
 
 func openFile(path string) ([]byte, error) {
@@ -74,11 +81,38 @@ func main() {
 		}
 		var attr []string
 
+		if spell.Group != "" {
+			attr = append(attr, "spell:group(\""+spell.Group+"\")")
+		}
+		if spell.Spellid != "" {
+			attr = append(attr, "spell:spellid(\""+spell.Spellid+"\")")
+		}
 		if spell.Name != "" {
 			attr = append(attr, "spell:name(\""+spell.Name+"\")")
 		}
 		if spell.Words != "" {
 			attr = append(attr, "spell:words(\""+spell.Words+"\")")
+		}
+		if spell.Lvl != "" {
+			attr = append(attr, "spell:lvl(\""+spell.Lvl+"\")")
+		}
+		if spell.Mana != "" {
+			attr = append(attr, "spell:mana(\""+spell.Mana+"\")")
+		}
+		if spell.Range != "" {
+			attr = append(attr, "spell:range(\""+spell.Range+"\")")
+		}
+		if spell.Exhaustion != "" {
+			attr = append(attr, "spell:cooldown(\""+spell.Exhaustion+"\")")
+		}
+		if spell.Groupcooldown != "" {
+			attr = append(attr, "spell:groupcooldown(\""+spell.Groupcooldown+"\")")
+		}
+		if spell.Prem == "1" {
+			attr = append(attr, "spell:isPremium(true)")
+		}
+		if spell.CasterTargetOrDirection == "1" {
+			attr = append(attr, "spell:needCasterTargetOrDirection(true)")
 		}
 		if spell.Aggressive == "1" {
 			attr = append(attr, "spell:isAggressive(true)")
@@ -95,14 +129,8 @@ func main() {
 		if spell.Direction == "1" {
 			attr = append(attr, "spell:needDirection(true)")
 		}
-		if spell.Exhaustion != "" {
-			attr = append(attr, "spell:cooldown(\""+spell.Exhaustion+"\")")
-		}
 		if spell.SelfTarget == "1" {
 			attr = append(attr, "spell:isSelfTarget(true)")
-		}
-		if spell.Range != "" {
-			attr = append(attr, "spell:selfTarget(\""+spell.Range+"\")")
 		}
 
 		for u := 0; u < len(attr); u++ {

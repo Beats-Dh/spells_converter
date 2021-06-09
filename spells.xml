@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spells>
-	<instant name="fury paralyze" words="###168" aggressive="1" blockwalls="1" needtarget="1" needlearn="1" script="monster/fury paralyze.lua"/>
+	<instant group="support" spellid="194" name="fury paralyze" words="###168" lvl="50" mana="30" range="3" prem="1" 
+	casterTargetOrDirection="1" aggressive="1" blockwalls="1" selftarget="1" needtarget="1" exhaustion="40000" groupcooldown="2000" 
+	needlearn="1" direction="1" script="monster/fury paralyze.lua"/>
 </spells>
