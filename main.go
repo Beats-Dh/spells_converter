@@ -63,7 +63,7 @@ func main() {
 			}
 		}
 
-		output := bytes.Replace(input, []byte("function onCastSpell("), []byte("local spell = Spell(\"instant\")\nfunction spell.onCastSpell("), -1)
+		output := bytes.Replace(input, []byte("function onCastSpell("), []byte("local spell = Spell(\"instant\")\n\nfunction spell.onCastSpell("), -1)
 		if err = ioutil.WriteFile("new/"+spell.Script, output, 0666); err != nil {
 			log.Fatal(err)
 		}
@@ -96,10 +96,10 @@ func main() {
 			attr = append(attr, "spell:needDirection(true)")
 		}
 		if spell.Exhaustion != "" {
-			attr = append(attr, "spell:exhaustion(\""+spell.Exhaustion+"\")")
+			attr = append(attr, "spell:cooldown(\""+spell.Exhaustion+"\")")
 		}
 		if spell.SelfTarget == "1" {
-			attr = append(attr, "spell:selfTarget(true)")
+			attr = append(attr, "spell:isSelfTarget(true)")
 		}
 		if spell.Range != "" {
 			attr = append(attr, "spell:selfTarget(\""+spell.Range+"\")")
