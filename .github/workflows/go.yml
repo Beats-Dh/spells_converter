@@ -1,10 +1,14 @@
 name: Go
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+  push:
+    branches:
+      - master
+      - dev
+      - devel
+      - develop
+      - main
 
 jobs:
 
