@@ -1,0 +1,33 @@
+name: Build - Ubuntu
+on:
+  pull_request:
+    branches: [ '**' ]
+  push:
+    branches:
+      - master
+      - dev
+      - devel
+      - develop
+
+jobs:
+  ubuntu-build:
+    strategy:
+      matrix:
+        go-version: [ 1.16.x ]
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: build
+        run: go build -o spell-convert ./src/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}-SpellConvert-amd64-${{ matrix.buildtype }}-${{ github.sha }}
+          path: |
+            ${{ github.workspace }}
+            !${{ github.workspace }}/.git/
+            !${{ github.workspace }}/.github/
+            !${{ github.workspace }}/.gitignore
