@@ -18,11 +18,11 @@ type Spells struct {
 type Spell struct {
 	XMLName                 xml.Name `xml:"instant"`
 	Group                   string   `xml:"group,attr"`
-	Spellid                 string   `xml:"spellid,attr"`
-	Lvl                     string   `xml:"lvl,attr"`
+	SpellID                 string   `xml:"spellid,attr"`
+	Level                   string   `xml:"lvl,attr"`
 	Mana                    string   `xml:"mana,attr"`
-	Groupcooldown           string   `xml:"groupcooldown,attr"`
-	Prem                    string   `xml:"prem,attr"`
+	GroupCooldown           string   `xml:"groupcooldown,attr"`
+	Premium                 string   `xml:"prem,attr"`
 	CasterTargetOrDirection string   `xml:"castertargetordirection,attr"`
 	Name                    string   `xml:"name,attr"`
 	Words                   string   `xml:"words,attr"`
@@ -37,6 +37,18 @@ type Spell struct {
 	Script                  string   `xml:"script,attr"`
 }
 
+type Vocations struct {
+	XMLName   xml.Name   `xml:"vocations"`
+	Vocations []Vocation `xml:"vocation"`
+}
+
+type Vocation struct {
+	XMLName      xml.Name `xml:"vocation"`
+	ID           string   `xml:"id,attr"`
+	Name         string   `xml:"name,attr"`
+	FromVocation string   `xml:"fromvoc,attr"`
+}
+
 func openFile(path string) ([]byte, error) {
 	input, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -47,14 +59,22 @@ func openFile(path string) ([]byte, error) {
 }
 
 func main() {
-	xmlFile, err := os.Open("spells.xml")
+	xmlSpells, err := os.Open("spells.xml")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer xmlFile.Close()
-	byteValue, _ := ioutil.ReadAll(xmlFile)
+	xmlVoc, err := os.Open("vocations.xml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer xmlSpells.Close()
+	defer xmlVoc.Close()
 	var spells *Spells
+	var voc *Vocations
+	byteValue, _ := ioutil.ReadAll(xmlSpells)
 	xml.Unmarshal(byteValue, &spells)
+	byteValue, _ = ioutil.ReadAll(xmlVoc)
+	xml.Unmarshal(byteValue, &voc)
 	for i := 0; i < len(spells.Spells); i++ {
 		spell := spells.Spells[i]
 		if !strings.Contains("monster/", "") {
@@ -84,8 +104,8 @@ func main() {
 		if spell.Group != "" {
 			attr = append(attr, "spell:group(\""+spell.Group+"\")")
 		}
-		if spell.Spellid != "" {
-			attr = append(attr, "spell:spellid(\""+spell.Spellid+"\")")
+		if spell.SpellID != "" {
+			attr = append(attr, "spell:spellid(\""+spell.SpellID+"\")")
 		}
 		if spell.Name != "" {
 			attr = append(attr, "spell:name(\""+spell.Name+"\")")
@@ -93,8 +113,8 @@ func main() {
 		if spell.Words != "" {
 			attr = append(attr, "spell:words(\""+spell.Words+"\")")
 		}
-		if spell.Lvl != "" {
-			attr = append(attr, "spell:lvl(\""+spell.Lvl+"\")")
+		if spell.Level != "" {
+			attr = append(attr, "spell:lvl(\""+spell.Level+"\")")
 		}
 		if spell.Mana != "" {
 			attr = append(attr, "spell:mana(\""+spell.Mana+"\")")
@@ -105,10 +125,10 @@ func main() {
 		if spell.Exhaustion != "" {
 			attr = append(attr, "spell:cooldown(\""+spell.Exhaustion+"\")")
 		}
-		if spell.Groupcooldown != "" {
-			attr = append(attr, "spell:groupcooldown(\""+spell.Groupcooldown+"\")")
+		if spell.GroupCooldown != "" {
+			attr = append(attr, "spell:groupcooldown(\""+spell.GroupCooldown+"\")")
 		}
-		if spell.Prem == "1" {
+		if spell.Premium == "1" {
 			attr = append(attr, "spell:isPremium(true)")
 		}
 		if spell.CasterTargetOrDirection == "1" {
